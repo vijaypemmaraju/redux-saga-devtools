@@ -37,7 +37,7 @@ export default function createSagaMonitor({time = getTime, dispatch: customDispa
 
   function effectResolved(effectId, result) {
     if(is.task(result)) {
-      result.done.then(
+      result.toPromise.then(
         taskResult => {
           if(result.isCancelled())
             effectCancelled(effectId)
