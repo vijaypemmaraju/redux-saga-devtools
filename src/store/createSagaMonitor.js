@@ -16,7 +16,7 @@ function getTime() {
     return Date.now()
 }
 
-export default function createSagaMonitor({time = getTime, dispatch: customDispatch, actionBlacklist = []}={}) {
+export default function createSagaMonitor({time = getTime, dispatch: customDispatch, actionsBlacklist= []}={}) {
 
   let store
   let dispatch
@@ -28,6 +28,10 @@ export default function createSagaMonitor({time = getTime, dispatch: customDispa
   }
 
   function effectTriggered(effect) {
+    if (effect.PUT && actionsBlacklist.includes(effect.PUT.action.type)) {
+      return;
+    }
+
     dispatch({
       type: EFFECT_TRIGGERED,
       effect,
@@ -80,7 +84,7 @@ export default function createSagaMonitor({time = getTime, dispatch: customDispa
 
 
   function actionDispatched(action) {
-    if (actionBlacklist.includes[action.type]) {
+    if (actionsBlacklist[action.type]) {
       return;
     }
     const isSagaAction = action[SAGA_ACTION]
