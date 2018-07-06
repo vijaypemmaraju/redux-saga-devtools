@@ -16,7 +16,7 @@ function getTime() {
     return Date.now()
 }
 
-export default function createSagaMonitor({time = getTime, dispatch: customDispatch}={}) {
+export default function createSagaMonitor({time = getTime, dispatch: customDispatch, actionBlacklist = []}={}) {
 
   let store
   let dispatch
@@ -80,6 +80,9 @@ export default function createSagaMonitor({time = getTime, dispatch: customDispa
 
 
   function actionDispatched(action) {
+    if (actionBlacklist.includes[action.type]) {
+      return;
+    }
     const isSagaAction = action[SAGA_ACTION]
     const now = time()
     dispatch({
